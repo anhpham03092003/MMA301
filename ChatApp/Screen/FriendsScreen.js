@@ -3,9 +3,10 @@ import React, { useContext, useEffect, useState } from 'react'
 import { UserType } from '../Context/UserContext';
 import axios from 'axios';
 import FriendRequest from '../components/FriendRequest';
+import { IpContext, IpType } from '../Context/IpContext';
 
 const FriendsScreen = () => {
-  const ip = "192.168.67.101";
+  const {ip} = useContext(IpType);
   const { userId, setUserId } = useContext(UserType);
   const [friendRequests, setFriendRequests] = useState([]);
   useEffect(() => {

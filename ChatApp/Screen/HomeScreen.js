@@ -3,28 +3,40 @@ import React, { useContext, useEffect, useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+import AntDesign from '@expo/vector-icons/AntDesign';
 import { UserType } from '../Context/UserContext';
 import axios from 'axios';
 import User from '../components/User';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import jwt_decode from 'jwt-decode';
 import codegenNativeCommands from 'react-native/Libraries/Utilities/codegenNativeCommands';
+import { IpContext, IpType } from '../Context/IpContext';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const { userId, setUserId } = useContext(UserType);
   const [users, setUsers] = useState([]);
-  const ip = "192.168.67.101";
+  const {ip} = useContext(IpType);
+
+  const logout = async () => {
+    try {
+      await AsyncStorage.removeItem("authToken");
+      navigation.navigate("Login");
+    } catch (error) {
+      console.log(error);
+    }
+  }
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: "",
       headerLeft: () => (
-        <Text style={styles.headerLeft}>Swift Chat</Text>
+        <Text style={styles.headerLeft}>MMA Chat</Text>
       ),
       headerRight: () => (
         <View style={styles.headerRight}>
           <Ionicons onPress={() => navigation.navigate("Chats")} name="chatbox-ellipses-outline" size={24} color="black" />
           <MaterialIcons onPress={() => navigation.navigate("Friends")} name="people-outline" size={24} color="black" />
+          <AntDesign onPress={logout} name="logout" size={24} color="black" />
         </View>
       ),
     })

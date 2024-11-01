@@ -3,9 +3,10 @@ import React, { useContext } from 'react'
 import axios from 'axios';
 import { UserType } from '../Context/UserContext';
 import { useNavigation } from '@react-navigation/native';
+import {IpType } from '../Context/IpContext';
 
 const FriendRequest = ({item, friendRequests, setFriendRequests}) => {
-    const ip = "192.168.67.101";
+    const {ip} = useContext(IpType);
     const {userId, setUserId} = useContext(UserType);
     const navigation = useNavigation();
     const acceptRequest = async (friendRequestId) => {
@@ -31,7 +32,7 @@ const FriendRequest = ({item, friendRequests, setFriendRequests}) => {
     }
     return (
         <Pressable style={styles.container}>
-            <Image source={{ uri: item.image }} style={styles.image} />
+            <Image source={require(`../images/avatar.jpg`)} style={styles.image} />
 
             <Text style={{ fontSize: 15, fontWeight: "bold" }}>
                 {item?.name} sent you a friend request
@@ -60,6 +61,7 @@ const styles = StyleSheet.create({
         width: 50,
         height: 50,
         borderRadius: 25,
+        marginLeft: 10
     },
     acceptButton: {
         backgroundColor: "#0066b2",

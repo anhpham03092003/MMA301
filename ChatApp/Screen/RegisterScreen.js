@@ -1,18 +1,77 @@
-import { KeyboardAvoidingView, Pressable, TextInput, StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
+import { KeyboardAvoidingView, Pressable, TextInput, StyleSheet, Text, View, Alert } from 'react-native';
+import React, { useContext, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import { IpType } from '../Context/IpContext';
+
 const RegisterScreen = () => {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
-  const [imgage, setImage] = useState('');
+  const [errors, setErrors] = useState({ name: '', email: '', password: '' });
+  const { ip } = useContext(IpType);
   const navigation = useNavigation();
+
+  const validate = () => {
+    let valid = true;
+    let errorsTemp = { name: '', email: '', password: '' };
+
+    // Kiểm tra tên
+    if (name.trim() === '') {
+      errorsTemp.name = 'Name is required';
+      valid = false;
+    }
+
+    // Kiểm tra email
+    if (email.trim() === '') {
+      errorsTemp.email = 'Email is required';
+      valid = false;
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      errorsTemp.email = 'Email is invalid';
+      valid = false;
+    }
+
+    // Kiểm tra mật khẩu
+    if (password.length < 6) {
+      errorsTemp.password = 'Password must be at least 6 characters';
+      valid = false;
+    }
+
+    setErrors(errorsTemp);
+    return valid;
+  };
+
+  const handleRegister = () => {
+    if (!validate()) {
+      Alert.alert('Validation failed', 'Please fix the errors before submitting.');
+      return;
+    }
+
+    const user = {
+      name: name,
+      email: email,
+      password: password,
+    };
+
+    console.log(user);
+    axios
+      .post(`http://${ip}:3000/auth/register`, user)
+      .then((res) => {
+        console.log(res.data);
+        Alert.alert("Registered Successfully");
+        navigation.navigate("Login");
+      })
+      .catch((err) => {
+        console.error(err);
+        Alert.alert("Registration failed", "An error occurred during registration.");
+      });
+  };
+
   return (
     <View style={styles.container}>
       <KeyboardAvoidingView>
         <View style={styles.header}>
           <Text style={styles.title1}>Register</Text>
-
           <Text style={styles.title2}>Register to get started</Text>
         </View>
 
@@ -21,9 +80,11 @@ const RegisterScreen = () => {
           <TextInput
             value={name}
             onChangeText={(text) => setName(text)}
-            style={styles.inputFeild}
+            style={styles.inputField}
             placeholderTextColor={"black"}
-            placeholder='Enter Your Name' />
+            placeholder='Enter Your Name'
+          />
+          {errors.name ? <Text style={styles.errorText}>{errors.name}</Text> : null}
         </View>
 
         <View style={{ marginTop: 10 }}>
@@ -31,9 +92,12 @@ const RegisterScreen = () => {
           <TextInput
             value={email}
             onChangeText={(text) => setEmail(text)}
-            style={styles.inputFeild}
+            style={styles.inputField}
             placeholderTextColor={"black"}
-            placeholder='Enter Your Email' />
+            placeholder='Enter Your Email'
+            keyboardType="email-address"
+          />
+          {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
         </View>
 
         <View style={{ marginTop: 10 }}>
@@ -42,23 +106,14 @@ const RegisterScreen = () => {
             value={password}
             onChangeText={(text) => setPassword(text)}
             secureTextEntry={true}
-            style={styles.inputFeild}
+            style={styles.inputField}
             placeholderTextColor={"black"}
-            placeholder='Password' />
+            placeholder='Password'
+          />
+          {errors.password ? <Text style={styles.errorText}>{errors.password}</Text> : null}
         </View>
 
-        <View style={{ marginTop: 10 }}>
-          <Text style={styles.inputLabel}>Image</Text>
-          <TextInput
-            value={imgage}
-            onChangeText={(text) => setImage(text)}
-            style={styles.inputFeild}
-            placeholderTextColor={"black"}
-            placeholder='Image' />
-        </View>
-
-
-        <Pressable style={styles.loginButton}>
+        <Pressable onPress={handleRegister} style={styles.loginButton}>
           <Text style={styles.loginButtonText}>Register</Text>
         </Pressable>
 
@@ -67,17 +122,17 @@ const RegisterScreen = () => {
         </Pressable>
       </KeyboardAvoidingView>
     </View>
-  )
-}
+  );
+};
 
-export default RegisterScreen
+export default RegisterScreen;
 
 const styles = StyleSheet.create({
   signUpText: {
     color: "gray",
     fontSize: 16,
     fontWeight: "bold",
-    textAlign: "center"
+    textAlign: "center",
   },
   loginButton: {
     width: 200,
@@ -93,39 +148,43 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
-    textAlign: "center"
+    textAlign: "center",
   },
   inputLabel: {
     fontSize: 18,
     fontWeight: "600",
-    color: "gray"
+    color: "gray",
   },
-  inputFeild: {
+  inputField: {
     fontSize: 18,
     borderBottomColor: "gray",
     borderBottomWidth: 1,
     marginVertical: 10,
-    width: 300
+    width: 300,
   },
-  container:{
-    flex: 1, 
-    backgroundColor: 'white', 
-    padding: 10, 
-    alignItems: 'center'
+  errorText: {
+    color: 'red', // Màu cho thông báo lỗi
+    marginTop: 5, // Khoảng cách trên thông báo lỗi
   },
-  header :{
-    marginTop: 100, 
-    justifyContent: "center", 
-    alignItems: "center"
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+    padding: 10,
+    alignItems: 'center',
   },
-  title1 : {
-    color: '#4A55A2', 
-    fontSize: 17, 
-    fontWeight: "600"
+  header: {
+    marginTop: 100,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  title2 : {
-    fontSize: 17, 
-    fontWeight: "600", 
-    marginTop: 15
-  }
-})
+  title1: {
+    color: '#4A55A2',
+    fontSize: 17,
+    fontWeight: "600",
+  },
+  title2: {
+    fontSize: 17,
+    fontWeight: "600",
+    marginTop: 15,
+  },
+});

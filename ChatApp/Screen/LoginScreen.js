@@ -1,13 +1,15 @@
 import { Alert, KeyboardAvoidingView, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { IpContext, IpType } from '../Context/IpContext';
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
-  const ip = "192.168.67.101";
+  const {ip} = useContext(IpType);
+  console.log(ip)
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
@@ -24,6 +26,7 @@ const LoginScreen = () => {
 
     checkLoginStatus();
   }, []);
+
   const handleLogin = () => {
     const user = {
       email: email,
@@ -31,7 +34,7 @@ const LoginScreen = () => {
     };
 
     axios
-      .post("http://${ip}:3000/auth/login", user)
+      .post(`http://${ip}:3000/auth/login`, user)
       .then((response) => {
         console.log(response);
         const token = response.data.token;

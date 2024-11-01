@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require('path'); 
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const passport = require("passport");
@@ -29,6 +30,7 @@ app.use(passport.initialize());
 app.use("/auth", authRoutes);
 app.use("/friends", friendRoutes);
 app.use("/messages", messageRoutes);
+app.use('/files', express.static(path.join(__dirname, 'files')));
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

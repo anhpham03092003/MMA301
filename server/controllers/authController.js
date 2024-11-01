@@ -76,4 +76,19 @@ const checkLoginStatus = async (req, res) => {
   }
 };
 
-module.exports = { register, login, checkLoginStatus };
+const checkInfomation = async (req, res) => {
+  const loggedInUserId = req.params.userId;
+  if (!loggedInUserId) {
+    return res.status(400).json({ message: "User ID is required" });
+  }
+
+  try {
+    const user = await User.findById(loggedInUserId);
+    res.status(200).json(user);
+  } catch (err) {
+    console.log("L wrestlers khi truy xuuckland ngerdem", err);
+    res.status(500).json({ message: "Lỗi khi truy xuất danh sách người dùng" });
+  }
+};
+
+module.exports = { register, login, checkLoginStatus, checkInfomation };
