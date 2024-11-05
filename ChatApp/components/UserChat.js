@@ -66,7 +66,7 @@ const UserChat = ({ item }) => {
       onPress={() => navigation.navigate("Messages",
         { recepientId: item?._id }
       )}>
-      <Image source={getImageSource(item?.imageUri)} style={styles.image} />
+      <Image source={item?.image} style={styles.image} />
       <View style={{ flex: 1 }}>
         <Text style={{ fontSize: 15, fontWeight: "500" }}>{item?.name}</Text>
         {lastMessage &&(

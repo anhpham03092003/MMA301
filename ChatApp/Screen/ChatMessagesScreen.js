@@ -115,10 +115,11 @@ const ChatMessagesScreen = () => {
           ) : (
             <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Image
-              source={require(`../images/avatar.jpg`)}
-              style={{ height: 40, width: 40, borderRadius: 20 }}
+              source={
+                recepientData?.image}
+              style={{ height: 40, width: 40, borderRadius: 20, marginRight: 10 }}
             />
-            <Text>{recepientData?.name}</Text>
+            <Text style={{ fontSize: 16, fontWeight: "500" }}>{recepientData?.name}</Text>
           </View>
           )}
 
@@ -129,9 +130,7 @@ const ChatMessagesScreen = () => {
 
       headerRight: () => selectedMessages.length > 0 ? (
         <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-          <Ionicons name="arrow-redo-circle" size={24} color="black" />
-          <Ionicons name="arrow-undo" size={24} color="black" />
-          <FontAwesome name="star" size={24} color="black" />
+          
           <MaterialIcons onPress={() => deleteMessages(selectedMessages)} name="delete" size={24} color="black" />
         </View>
       ) : null,
