@@ -17,7 +17,7 @@ const HomeScreen = () => {
   const { userId, setUserId } = useContext(UserType);
   const [users, setUsers] = useState([]);
   const {ip} = useContext(IpType);
-
+  const [refresh, setRefresh] = useState(false);
   const logout = async () => {
     try {
       await AsyncStorage.removeItem("authToken");
@@ -34,6 +34,7 @@ const HomeScreen = () => {
       ),
       headerRight: () => (
         <View style={styles.headerRight}>
+          <AntDesign name="profile" onPress={() => navigation.navigate("Profile")} size={24} color="black" />
           <Ionicons onPress={() => navigation.navigate("Chats")} name="chatbox-ellipses-outline" size={24} color="black" />
           <MaterialIcons onPress={() => navigation.navigate("Friends")} name="people-outline" size={24} color="black" />
           <AntDesign onPress={logout} name="logout" size={24} color="black" />
@@ -41,29 +42,34 @@ const HomeScreen = () => {
       ),
     })
   }, []);
+
+  const fetchUsers = async () => {
+    try {
+      const token = await AsyncStorage.getItem("authToken");
+      console.log("token", token);
+      const decodedToken = jwt_decode(token);
+      console.log("decodedToken", decodedToken);
+    const userId = decodedToken.userId;
+    console.log("userId", userId);
+    setUserId(userId);
+    axios.get(`http://${ip}:3000/auth/users/${userId}`).then((response) => {
+      setUsers(response.data);
+    }).catch((error) => {
+      console.log("ko tim dc user", error);
+    })
+    } catch (error) {
+      console.log(error);
+    }
+
+  };
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const token = await AsyncStorage.getItem("authToken");
-        console.log("token", token);
-        const decodedToken = jwt_decode(token);
-        console.log("decodedToken", decodedToken);
-      const userId = decodedToken.userId;
-      console.log("userId", userId);
-      setUserId(userId);
-      axios.get(`http://${ip}:3000/auth/users/${userId}`).then((response) => {
-        setUsers(response.data);
-      }).catch((error) => {
-        console.log("ko tim dc user", error);
-      })
-      } catch (error) {
-        console.log(error);
-      }
-
-    };
-
     fetchUsers();
   }, []);
+
+  useEffect(() => {
+    fetchUsers();
+}, [refresh]);
+
   console.log("JWT Decode:", jwt_decode);
   console.log("users", users);
   return (

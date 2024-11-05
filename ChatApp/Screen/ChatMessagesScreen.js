@@ -94,6 +94,8 @@ const ChatMessagesScreen = () => {
   
     return () => clearInterval(intervalId); 
   }, [userId, recepientId]);
+
+
   useLayoutEffect(() => {
     navigate.setOptions({
       headerTitle: "",
@@ -137,7 +139,6 @@ const ChatMessagesScreen = () => {
   }, [recepientData, selectedMessages]);
 
   const deleteMessages = async (messageIds) => {
-    console.log("messageIds", messageIds);
     try {
       const response = await axios.post(`http://${ip}:3000/messages/delete-messages`, { messages: messageIds });
       if (response.status === 200) {
@@ -169,14 +170,12 @@ const ChatMessagesScreen = () => {
 
   const handleSelectMessage = (message) => {
     const isSelected = selectedMessages.includes(message._id);
-    console.log("isSelected", isSelected);
     if (isSelected) {
       setSelectedMessages((previousMessages) => previousMessages.filter((id) => id !== message._id));
     } else {
       setSelectedMessages((previousMessages) => [...previousMessages, message._id]);
     }
   }
-  console.log("selectedMessages", selectedMessages);
   return (
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: "#F0F0F0" }}>
       <ScrollView>

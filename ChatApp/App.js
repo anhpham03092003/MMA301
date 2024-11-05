@@ -3,14 +3,17 @@ import { StyleSheet, Text, View } from 'react-native';
 import StackNavigator from './Navigation/StackNavigator';
 import { UserContext } from './Context/UserContext';
 import { IpContext } from './Context/IpContext';
+import { ImageProvider } from './Context/ImageContext';
 
 export default function App() {
   return (
     <>
       <IpContext>
+      <ImageProvider>
         <UserContext>
           <StackNavigator />
         </UserContext>
+      </ImageProvider>
       </IpContext>
     </>
   );

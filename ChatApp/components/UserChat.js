@@ -11,6 +11,23 @@ const UserChat = ({ item }) => {
   const { userId, setUserId } = useContext(UserType);
   const { ip } = useContext(IpType);
   const [messages, setMessages] = useState([]);
+
+  const imageList = [
+    require('../images/avatar/image1.jpg'),
+    require('../images/avatar/image2.jpeg'),
+    require('../images/avatar/image3.jpg'),
+    require('../images/avatar/image4.jpg'),
+    require('../images/avatar/image5.jpg'),
+    require('../images/avatar/image6.jpg'),
+    require('../images/avatar/image7.jpg'),
+    require('../images/avatar/image8.jpg'),
+    require('../images/avatar/imageDefault.jpg'),
+  ];
+
+  const getImageSource = (imageUri) => {
+    const image = imageList.find((img) => img.uri === imageUri);
+    return image ? image : require('../images/avatar/imageDefault.jpg');
+  }; 
   const fetchMessages = async () => {
     try {
       const response = await axios.get(`http://${ip}:3000/messages/get-messages/${userId}/${item._id}`);
@@ -49,7 +66,7 @@ const UserChat = ({ item }) => {
       onPress={() => navigation.navigate("Messages",
         { recepientId: item?._id }
       )}>
-      <Image source={require(`../images/avatar.jpg`)} style={styles.image} />
+      <Image source={getImageSource(item?.imageUri)} style={styles.image} />
       <View style={{ flex: 1 }}>
         <Text style={{ fontSize: 15, fontWeight: "500" }}>{item?.name}</Text>
         {lastMessage &&(

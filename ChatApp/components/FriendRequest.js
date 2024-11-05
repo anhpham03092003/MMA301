@@ -9,6 +9,19 @@ const FriendRequest = ({item, friendRequests, setFriendRequests}) => {
     const {ip} = useContext(IpType);
     const {userId, setUserId} = useContext(UserType);
     const navigation = useNavigation();
+
+    const imageList = [
+        require('../images/avatar/image1.jpg'),
+        require('../images/avatar/image2.jpeg'),
+        require('../images/avatar/image3.jpg'),
+        require('../images/avatar/image4.jpg'),
+        require('../images/avatar/image5.jpg'),
+        require('../images/avatar/image6.jpg'),
+        require('../images/avatar/image7.jpg'),
+        require('../images/avatar/image8.jpg'),
+        require('../images/avatar/imageDefault.jpg'),
+      ];
+    
     const acceptRequest = async (friendRequestId) => {
         try {
             const response = await axios.post(`http://${ip}:3000/friends/friend-request/accept`,{
@@ -32,7 +45,7 @@ const FriendRequest = ({item, friendRequests, setFriendRequests}) => {
     }
     return (
         <Pressable style={styles.container}>
-            <Image source={require(`../images/avatar.jpg`)} style={styles.image} />
+            <Image source={item?.image} style={styles.image} />
 
             <Text style={{ fontSize: 15, fontWeight: "bold" }}>
                 {item?.name} sent you a friend request

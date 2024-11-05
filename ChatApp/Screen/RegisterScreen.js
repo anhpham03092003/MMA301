@@ -83,6 +83,7 @@ const RegisterScreen = () => {
             style={styles.inputField}
             placeholderTextColor={"black"}
             placeholder='Enter Your Name'
+            
           />
           {errors.name ? <Text style={styles.errorText}>{errors.name}</Text> : null}
         </View>
@@ -117,7 +118,7 @@ const RegisterScreen = () => {
           <Text style={styles.loginButtonText}>Register</Text>
         </Pressable>
 
-        <Pressable onPress={() => navigation.navigate("Home")} style={{ marginTop: 20 }}>
+        <Pressable onPress={() => navigation.navigate("Login")} style={{ marginTop: 20 }}>
           <Text style={styles.signUpText}>Already have an account? Login</Text>
         </Pressable>
       </KeyboardAvoidingView>

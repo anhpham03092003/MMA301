@@ -15,26 +15,23 @@ const userSchema = new mongoose.Schema({
   },
   image: {
     type: String,
-    default: "",
+    default: "34",
   },
   friendRequests: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      unique: true,
       ref: "User",
     },
   ],
   friends: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      unique: true,
       ref: "User",
     },
   ],
   sentFriendRequests: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      unique: true,
       ref: "User",
     },
   ],
